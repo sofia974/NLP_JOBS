@@ -6,7 +6,7 @@
 
 import csv
 import pandas as pd
-archivo_csv = "C://Users//ASUS//Documents//SOFIA//IA//DATA//Linkedin_TI_2k_SV.csv"
+archivo_csv = "/IA//DATA//Linkedin_TI_2k_SV.csv"
 
 df = pd.read_csv('Linkedin_TI12k.csv')
 
@@ -170,7 +170,7 @@ df["Cuerpo_en"].iloc[1]
 import pandas as pd
 import os
 
-folder_name = "C://Users//ASUS//Documents//SOFIA//IA//DATA"
+folder_name = "/SOFIA//IA//DATA"
 
 # Verificar si la carpeta existe, si no, crearla
 if not os.path.exists(folder_name):
@@ -190,7 +190,7 @@ print(f"El archivo se ha guardado en: {file_path}")
 
 import csv
 import pandas as pd
-archivo_csv = "C://Users//ASUS//Documents//SOFIA//IA//DATA//data_english.csv"
+archivo_csv = "/IA//DATA//data_english.csv"
 
 df = pd.read_csv('data_english.csv')
 
@@ -339,99 +339,6 @@ df['Skills'] = df['Cuerpo_en'].apply(extract_skills)
 print(df[['Cuerpo_en', 'Skills']].head())
 
 
-# In[63]:
-
-
-df.head()
-
-
-# #### Obteniendo los requerimientos de cada puesto de trabajo
-
-# In[70]:
-
-
-import re
-
-text = df["Cuerpo_en"].iloc[1]
-
-def extract_requirements(text):
-    # Expresiones regulares para encontrar frases que indiquen requisitos
-    regex_experience = r'\b(\d+\s*(?:years|year))\b'  # Buscar patrón de años de experiencia
-    regex_education = r'(?:Academic training|Specialization)\s+(.*?)\.'  # Buscar formación académica y especialización
-
-    # Buscar coincidencias de patrones en el texto
-    experience_matches = re.findall(regex_experience, text)
-    education_matches = re.findall(regex_education, text, flags=re.IGNORECASE)
-
-    # Combinar resultados de experiencia y educación
-    requirements = {
-        'Experience': experience_matches,
-        'Education': education_matches
-    }
-
-    return requirements
-
-# Aplicar la función extract_requirements al texto para obtener los requisitos
-requirements = extract_requirements(text)
-
-# Mostrar los requisitos encontrados
-print("Requisitos de experiencia:", requirements['Experience'])
-print("Requisitos de educación:", requirements['Education'])
-
-
-# In[85]:
-
-
-import pandas as pd
-import re
-
-# Función para extraer los requisitos de una descripción de trabajo en inglés
-def extract_requirements(description):
-    # Expresiones regulares para encontrar frases que indiquen requisitos
-    regex_experience = r'experience\s+([\w\s,]+)'
-    regex_skills = r'skills\s+([\w\s,]+)'
-
-    # Buscar coincidencias de patrones en la descripción (ignorando mayúsculas y minúsculas)
-    experience_matches = re.findall(regex_experience, description.lower())
-    skills_matches = re.findall(regex_skills, description.lower())
-
-    # Combinar resultados de experiencia y habilidades
-    requirements = {
-        'Experience': experience_matches,
-        'Skills': skills_matches
-    }
-
-    return requirements
-
-# Aplicar la función extract_requirements a la columna 'Cuerpo_en' para obtener los requisitos de cada puesto de trabajo
-df['Requirements'] = df['Cuerpo_en'].apply(extract_requirements)
-
-# Mostrar los requisitos encontrados para cada puesto de trabajo
-print(df[['Cuerpo_en', 'Requirements']].head())
-
-
-# In[89]:
-
-
-df["Cuerpo"].iloc[2]
-
-
-# In[90]:
-
-
-df["Requirements"].iloc[2]
-
-
-# In[122]:
-
-
-import matplotlib.pyplot as plt
-import pandas as pd
-
-fig=plt.figure(figsize=(10, 5), dpi= 80, facecolor='w', edgecolor='k')
-df.Titulo.hist()
-
-
 # In[124]:
 
 
@@ -474,53 +381,9 @@ print(f"La palabra 'requirement' o 'requirements' se encuentra en {count_require
 
 import pandas as pd
 
-# Suponiendo que 'df' es tu DataFrame que contiene la columna 'Cuerpo_en'
-
-# Contar las filas que no contienen 'requirement' o 'requirements'
 count_not_requirements = (~df['Cuerpo_en'].str.lower().str.contains('requirement|requirements')).sum()
 
 print(f"La palabra 'requirement' o 'requirements' no se encuentra en {count_not_requirements} filas.")
-
-
-# In[142]:
-
-
-df["Cuerpo"].iloc[6044]
-
-
-# In[147]:
-
-
-import nltk
-from nltk.tokenize import word_tokenize
-import pandas as pd
-
-# Tokenizar las descripciones de trabajo
-df['Tokens'] = df['Cuerpo_en'].apply(word_tokenize)
-
-# Definir palabras clave que indiquen requisitos
-required_keywords = ['skills', 'experience', 'education', 'requirements']
-
-# Función para extraer los requisitos
-def extract_requirements(tokens):
-    requirements = []
-    for i, token in enumerate(tokens):
-        if token.lower() in required_keywords:
-            req = ' '.join(tokens[i+1:])  # Extraer los tokens después de la palabra clave
-            requirements.append(req)
-    return requirements
-
-# Aplicar la función de extracción de requisitos a cada descripción de trabajo
-df['Requisitos_2'] = df['Tokens'].apply(extract_requirements)
-
-# Mostrar los requisitos encontrados
-print(df[['Cuerpo_en', 'Requisitos_2']])
-
-
-# In[153]:
-
-
-df["Requisitos_2"].iloc[3]
 
 
 # In[154]:
@@ -556,34 +419,6 @@ print(df[['Cuerpo_en', 'Requisitos']])
 df["Requisitos"].iloc[0]
 
 
-# In[161]:
-
-
-import re
-
-# Función para extraer requerimientos de un texto
-def extract_requirements(text):
-    # Patrón de expresión regular para buscar requerimientos
-    pattern = r'\b(?:requirements|skills needed|requirements include|key qualifications|qualifications)\b[\w\s:,;-]+'
-    
-    # Buscar coincidencias con el patrón en el texto y devolver los resultados
-    matches = re.findall(pattern, text, flags=re.IGNORECASE)
-    return matches
-
-# Aplicar la función a la columna "Cuerpo_en" del DataFrame
-df['Requerimientos_3'] = df['Cuerpo_en'].apply(extract_requirements)
-
-
-# In[162]:
-
-
-df.head()
-
-
-# In[163]:
-
-
-df["Requerimientos_3"].iloc[0]
 
 
 # In[155]:
@@ -594,23 +429,7 @@ df.head()
 
 # ### MODELO
 
-# ### Aprendizaje automático supervisado
-
-# ##### El siguiente paso es crear un modelo de lenguaje. Este modelo se entrena en un conjunto de datos de texto, y aprende a identificar patrones en el texto.
 # ##### Dividimos en conjuntos de entrenamiento y prueba, y crea el modelo de lenguaje. El modelo de lenguaje consta de tres capas:
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
 # ### NLP para identificar palabras y frases claves en las descripciones de trabajo para identificar habilidades (Skills) 
 
 # In[5]:
@@ -690,13 +509,13 @@ import pandas as pd
 
 # Suponiendo que tienes un DataFrame llamado 'df' que quieres guardar
 # Ruta de la carpeta donde deseas guardar el archivo
-carpeta_destino = 'C://Users//ASUS//Documents//SOFIA//IA//DATA'  # Reemplaza con tu ruta deseada
+carpeta_destino = '/SOFIA//IA//DATA'  # Reemplaza con tu ruta deseada
 
-# Si la carpeta no existe, se puede crear
+
 if not os.path.exists(carpeta_destino):
     os.makedirs(carpeta_destino)
 
-# Ruta completa al archivo CSV en la carpeta
+
 ruta_archivo = os.path.join(carpeta_destino, 'data_final01.csv')
 
 # Guardar el DataFrame en formato CSV en la carpeta especificada
@@ -716,9 +535,7 @@ model_name = 'bert-base-uncased'
 tokenizer = BertTokenizer.from_pretrained(model_name)
 model = BertModel.from_pretrained(model_name)
 
-# Supongamos que tienes un DataFrame llamado 'df' con los campos 'Título', 'Descripción' y 'Skills'
 
-# Supongamos que tienes habilidades de entrada en formato de texto
 habilidades_entrada = "Python Machine Learning Data Analysis"
 
 # Codificar las habilidades de entrada con BERT
@@ -726,10 +543,8 @@ inputs = tokenizer(habilidades_entrada, return_tensors='pt', padding=True, trunc
 with torch.no_grad():
     outputs = model(**inputs)
 
-# Obtener la representación vectorial de las habilidades de entrada
 embedding_entrada = torch.mean(outputs.last_hidden_state, dim=1).squeeze().numpy()
 
-# Supongamos que 'Skills' en el DataFrame es una columna que contiene las habilidades requeridas de cada empleo
 skills_dataset = df['Skills'].tolist()
 
 # Verificar si la lista de habilidades no está vacía y contiene textos válidos
@@ -745,10 +560,8 @@ if len(skills_dataset) > 0 and all(isinstance(skill, str) for skill in skills_da
 
     embeddings_dataset = torch.tensor(embeddings_dataset)
 
-    # Calcular la similitud de coseno entre las habilidades de entrada y las del dataset
     similaridades = cosine_similarity([embedding_entrada], embeddings_dataset)
 
-    # Obtener los empleos más similares
     empleos_similares = df.loc[similaridades.argsort()[0][::-1][:5]]['Título']
     print("Empleos recomendados:")
     print(empleos_similares)
@@ -768,22 +581,17 @@ habilidades_entrada = "project management"
 # Supongamos que 'skills' en el DataFrame contiene las habilidades requeridas de cada empleo como listas
 skills_dataset = df['Skills'].apply(lambda skills_list: ' '.join(skills_list)).tolist()
 
-# Unir las habilidades de entrada con las habilidades del dataset
+
 skills_dataset.append(habilidades_entrada)
 
-# Inicializar el vectorizador TF-IDF
 vectorizer = TfidfVectorizer()
 
-# Calcular la matriz TF-IDF
 tfidf_matrix = vectorizer.fit_transform(skills_dataset)
 
-# Calcular la similitud de coseno entre las habilidades de entrada y las del dataset
 similaridades = cosine_similarity(tfidf_matrix[:-1], tfidf_matrix[-1])
 
-# Obtener los índices de los empleos más similares
-indices_similares = similaridades.argsort(axis=0)[:-6:-1]  # Obtener los 5 más similares, excluyendo la habilidad de entrada
+indices_similares = similaridades.argsort(axis=0)[:-6:-1
 
-# Imprimir los títulos de los empleos más similares
 empleos_similares = df.iloc[indices_similares.flatten()]['Titulo']
 print("Empleos recomendados:")
 print(empleos_similares)
@@ -794,7 +602,7 @@ print(empleos_similares)
 
 import csv
 import pandas as pd
-archivo_csv = "C://Users//ASUS//Documents//SOFIA//IA//DATA"
+archivo_csv = "SOFIA//IA//DATA"
 
 df = pd.read_csv('data_final01.csv')
 
@@ -815,29 +623,21 @@ import pandas as pd
 from tabulate import tabulate
 # Supongamos que tienes un DataFrame 'df' con columnas 'Título' y 'Skills'
 
-# Supongamos que tus habilidades son 'habilidades_entrada'
 habilidades_entrada = "project management service management pmi"
 
-# Inicializar el vectorizador TF-IDF
 tfidf = TfidfVectorizer(stop_words='english')
 
-# Concatenar las habilidades en una sola cadena
 df['Skills_text'] = df['Skills'].apply(lambda x: ' '.join(x))
 
-# Agregar las habilidades de entrada a una lista y luego al DataFrame
 nuevo_empleo = pd.DataFrame({'Titulo': ['Habilidades de Entrada'], 'Skills_text': [habilidades_entrada]})
 df_combined = pd.concat([df, nuevo_empleo], ignore_index=True)
 
-# Aplicar TF-IDF al texto de habilidades
 tfidf_matrix = tfidf.fit_transform(df_combined['Skills_text'])
 
-# Calcular similitud del coseno entre las habilidades de entrada y los empleos
 cosine_sim = linear_kernel(tfidf_matrix[-1], tfidf_matrix[:-1]).flatten()
 
-# Obtener los índices de los empleos más similares
 related_jobs_indices = cosine_sim.argsort()[:-6:-1]  
 
-# Imprimir los títulos de los empleos recomendados
 print("Empleos recomendados:")
 for i, index in enumerate(related_jobs_indices, start=1):
     title = df.iloc[index]['Titulo']
@@ -850,45 +650,34 @@ for i, index in enumerate(related_jobs_indices, start=1):
     print("\n")
 
 
-# In[66]:
+
 
 
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import linear_kernel
 import pandas as pd
-
-# Supongamos que tienes un DataFrame 'df' con columnas 'Título' y 'Skills'
-# También se supone que ya tienes definida 'habilidades_entrada'
-
 habilidades_entrada = "sotware pmi project management"
 
-# Inicializar el vectorizador TF-IDF
+
 tfidf = TfidfVectorizer(stop_words='english')
 
-# Concatenar las habilidades en una sola cadena
 df['Skills_text'] = df['Skills'].apply(lambda x: ' '.join(x))
 
-# Agregar las habilidades de entrada a una lista y luego al DataFrame
 nuevo_empleo = pd.DataFrame({'Titulo': ['Habilidades de Entrada'], 'Skills_text': [habilidades_entrada]})
 df_combined = pd.concat([df, nuevo_empleo], ignore_index=True)
 
-# Aplicar TF-IDF al texto de habilidades
 tfidf_matrix = tfidf.fit_transform(df_combined['Skills_text'])
 
-# Calcular similitud del coseno entre las habilidades de entrada y los empleos
 cosine_sim = linear_kernel(tfidf_matrix[-1], tfidf_matrix[:-1]).flatten()
 
-# Obtener los índices de los empleos más similares
 related_jobs_indices = cosine_sim.argsort()[:-10:-1]  
 
-# Imprimir los títulos de los empleos recomendados con la distancia de similitud
 print("Empleos recomendados y su distancia de similitud:")
 for i, index in enumerate(related_jobs_indices, start=1):
     title = df.iloc[index]['Titulo']
     link = df.iloc[index]['Link']
     skills = df.iloc[index]['Skills']
-    
-    # Calcular similitud de coseno entre habilidades de entrada y habilidades recomendadas
+
     tfidf_matrix_entrada = tfidf.transform([habilidades_entrada])
     tfidf_matrix_recomendada = tfidf.transform([df.iloc[index]['Skills']])
     similarity_score = linear_kernel(tfidf_matrix_entrada, tfidf_matrix_recomendada)[0][0]
@@ -900,98 +689,10 @@ for i, index in enumerate(related_jobs_indices, start=1):
     print("\n")
 
 
-# In[67]:
-
-
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics.pairwise import linear_kernel
-import pandas as pd
-
-# Supongamos que tienes un DataFrame 'df' con columnas 'Titulo' y 'Skills'
-# También se supone que ya tienes definida 'habilidades_entrada'
-
-habilidades_entrada = "sotware pmi project management"
-
-# Inicializar el vectorizador TF-IDF
-tfidf = TfidfVectorizer(stop_words='english')
-
-# Concatenar las habilidades en una sola cadena
-df['Skills_text'] = df['Skills'].apply(lambda x: ' '.join(x))
-
-# Agregar las habilidades de entrada a un nuevo DataFrame
-nuevo_empleo = pd.DataFrame({'Titulo': ['Habilidades de Entrada'], 'Skills_text': [habilidades_entrada]})
-df_combined = pd.concat([df, nuevo_empleo], ignore_index=True)
-
-# Aplicar TF-IDF al texto de habilidades
-tfidf_matrix = tfidf.fit_transform(df_combined['Skills_text'])
-
-# Calcular similitud del coseno entre las habilidades de entrada y los empleos
-cosine_sim = linear_kernel(tfidf_matrix[-1], tfidf_matrix[:-1]).flatten()
-
-# Obtener los índices de los empleos con similitud mayor a 0.5
-threshold = 0.5
-related_jobs_indices = [i for i, score in enumerate(cosine_sim) if score > threshold]
-
-# Imprimir los títulos de los empleos recomendados con la distancia de similitud
-print("Empleos recomendados con similitud mayor a 0.5:")
-for index in related_jobs_indices:
-    title = df.iloc[index]['Titulo']
-    link = df.iloc[index]['Link']
-    skills = df.iloc[index]['Skills']
-    
-    # Calcular similitud de coseno entre habilidades de entrada y habilidades recomendadas
-    tfidf_matrix_entrada = tfidf.transform([habilidades_entrada])
-    tfidf_matrix_recomendada = tfidf.transform([df.iloc[index]['Skills']])
-    similarity_score = linear_kernel(tfidf_matrix_entrada, tfidf_matrix_recomendada)[0][0]
-    
-    print(f"Titulo: {title}")
-    print(f"Link: {link}")
-    print(f"Skills: {skills}")
-    print(f"Distancia de similitud: {similarity_score}")
-    print("\n")
-
-
 # In[43]:
 
 
 df['Skills'].iloc[1]
-
-
-# In[3]:
-
-
-from wordcloud import WordCloud
-import matplotlib.pyplot as plt
-import pandas as pd
-
-
-# Unir todas las habilidades en una sola cadena
-text = ' '.join(df['Skills'])
-
-# Generar la nube de palabras
-wordcloud = WordCloud(width=800, height=400, background_color='white').generate(text)
-
-# Mostrar la nube de palabras
-plt.figure(figsize=(10, 6))
-plt.imshow(wordcloud, interpolation='bilinear')
-plt.axis('off')
-plt.show()
-
-
-# In[ ]:
-
-
-
-
-
-# In[59]:
-
-
-
-
-
-# In[ ]:
-
 
 
 
